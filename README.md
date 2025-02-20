@@ -26,15 +26,6 @@ To get started with Corvus, follow these steps:
 2. Place the `Corvus` folder in your `ReplicatedStorage` or `ServerScriptService` as needed.
 3. Require the `Corvus` module in your scripts.
 
-```lua
--- Example: Load the framework in ServerScriptService
-local Corvus = require(game.ServerScriptService.Modules.Corvus)
-local loader = Corvus:new()
-loader:load(game.ServerScriptService.Modules.Services, "Services")
-```
-
-*(Replace with actual installation instructions)*
-
 ---
 
 ## 📚 Usage
@@ -78,6 +69,9 @@ characterController.signals.onMove:Connect(function(direction)
     print("Character moved:", direction)
 end)
 ```
+
+## NOTE:
+If you feel more familiar with naming module loaders something such as 'require', 'import' or 'load', then feel free to rename the Corvus variable!!
 
 ---
 
