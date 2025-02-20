@@ -1,5 +1,3 @@
-Absolutely! Here's an enhanced and more engaging version of your README, incorporating best practices and additional details to attract contributors and users:
-
 ---
 
 # Corvus 🌟
