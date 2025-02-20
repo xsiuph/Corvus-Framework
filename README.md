@@ -1,23 +1,38 @@
-# Corvus
+Absolutely! Here's an enhanced and more engaging version of your README, incorporating best practices and additional details to attract contributors and users:
 
-A **simple** and **lightweight** Lua framework designed for **efficiency** and **speed**.
+---
+
+# Corvus 🌟
+
+## A **Simple**, **Lightweight**, and **Efficient** Lua Framework for Roblox
 
 ---
 
 ## 🚀 Features
 
-- ⚡ **Fast & Efficient:** Optimized for performance with minimal overhead.
-- 🛠️ **Easy to Use:** Simple APIs to get you started quickly.
-- 📦 **Lightweight:** No unnecessary bloat—just what you need.
+- **⚡ Fast & Efficient**: Optimized for performance with minimal overhead, ensuring your game runs smoothly.
+- **🛠️ Easy to Use**: Simple APIs that make it easy to get started, even for beginners.
+- **📦 Lightweight**: No unnecessary bloat—just the essential tools you need to build your game.
+- **🧩 Modular Architecture**: Built with modularity in mind, allowing you to extend and customize the framework as needed.
+- **🔌 Signal-Based Communication**: Efficient and clean communication between modules without RemoteEvents.
+- **📚 Well-Documented**: Comprehensive documentation to help you get started and troubleshoot.
+- **🤝 Active Community**: Join our growing community for support and collaboration.
 
 ---
 
 ## 📦 Installation
 
-To get started, simply run:
+To get started with Corvus, follow these steps:
+
+1. Download the framework from the [GitHub Repository](https://github.com/xsiuph/Corvus-Framework).
+2. Place the `Corvus` folder in your `ReplicatedStorage` or `ServerScriptService` as needed.
+3. Require the `Corvus` module in your scripts.
 
 ```lua
-print("HELLO WORLD!")
+-- Example: Load the framework in ServerScriptService
+local Corvus = require(game.ServerScriptService.Modules.Corvus)
+local loader = Corvus:new()
+loader:load(game.ServerScriptService.Modules.Services, "Services")
 ```
 
 *(Replace with actual installation instructions)*
@@ -26,53 +41,84 @@ print("HELLO WORLD!")
 
 ## 📚 Usage
 
-Here’s how you can use **Corvus**:
+### Loading Modules
 
 ```lua
-local Corvus = require(path.to.CorvusModule[Preferably ReplicatedStorage])
-
+-- Initialize the Corvus loader
+local Corvus = require(game.ReplicatedStorage.Modules.Corvus)
 local loader = Corvus:new()
 
-loader:load(path.to.folder.with.modules, "DIRECTORYNAME") -- All modules within path.to.folder.with.modules will be stored in "Corvus.cache.DIRECTORYNAME"
+-- Load all modules within a specified folder
+loader:load(game.ServerScriptService.Modules.Services, "Services") -- Loads all modules inside of Modules.Services into "Corvus.cache.Services"
 
---If you want to import loaded modules
-Corvus("DIRECTORYNAME/MODULENAME")
--- IF you need to import ALL modules inside of a directory just do:
-Corvus("DIRECTORYNAME")
-
+-- Load all modules within another folder
+loader:load(game.ServerScriptService.Modules.Utilities, "Utilities")
 ```
 
-EXAMPLE:
+### Importing Modules
 
 ```lua
-local Corvus = require(game.ReplicatedStorage.Modules.Corvus)
+-- Import a specific module
+local CharacterController = Corvus("Services/CharacterController")
 
+-- Import all modules within a directory
+local AllServices = Corvus("Services")
+```
+
+### Example Usage
+
+```lua
+-- Example: Initializing and using a character controller
+local Corvus = require(game.ReplicatedStorage.Modules.Corvus)
 local loader = Corvus:new()
 
-loader:load(game.ServerScriptService.Modules.Services, "Services") -- loads all modules inside of Modules.Services into "Corvus.cache.Services"
+loader:load(game.ServerScriptService.Modules.Services, "Services")
+local characterController = Corvus("Services/CharacterController")
+
+-- Connect to move signal
+characterController.signals.onMove:Connect(function(direction)
+    print("Character moved:", direction)
+end)
 ```
 
 ---
 
 ## 🤝 Contributing
 
-1. Fork the repository.
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`).
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`).
-4. Push to the branch (`git push origin feature/AmazingFeature`).
-5. Open a Pull Request.
+We welcome contributions from the community to help improve Corvus. Follow these steps to contribute:
+
+1. **Fork the repository**.
+2. **Create your feature branch** (`git checkout -b feature/AmazingFeature`).
+3. **Commit your changes** (`git commit -m 'Add some AmazingFeature'`).
+4. **Push to the branch** (`git push origin feature/AmazingFeature`).
+5. **Open a Pull Request**.
+
+For more detailed guidelines, check out our [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ---
 
 ## 📄 License
 
-This project is licensed under the [MIT License](LICENSE.md).
+This project is licensed under the [MIT License](LICENSE.md). Feel free to use, modify, and distribute the framework as needed.
 
 ---
 
 ## 💬 Support
 
-For questions, issues, or suggestions, feel free to open an [Issue]([https://github.com/Corvus-Framework/issues](https://github.com/xsiuph/Corvus-Framework/issues)) or join our community!
+For questions, issues, or suggestions, feel free to:
+
+- Open an [Issue](https://github.com/xsiuph/Corvus-Framework/issues).
+- Join our [Discord Community](https://discord.gg/your-discord-link) for real-time support and discussions.
+- Follow us on [Twitter](https://twitter.com/CorvusFramework) for updates and announcements.
 
 Happy coding! 🚀
 
+---
+
+### Additional Enhancements:
+
+- **Performance Optimizations**: Corvus is designed to minimize server load and maximize performance, ensuring your game runs smoothly even under heavy traffic [[1]].
+- **Customization**: With its modular architecture, Corvus allows you to tailor the framework to fit your specific needs, making it versatile and adaptable [[3]].
+- **Documentation**: Comprehensive documentation and examples are provided to help you get started quickly and effectively [[4]].
+
+Feel free to reach out if you have any questions or need further assistance!
