@@ -112,11 +112,3 @@ For questions, issues, or suggestions, feel free to:
 Happy coding! 🚀
 
 ---
-
-### Additional Enhancements:
-
-- **Performance Optimizations**: Corvus is designed to minimize server load and maximize performance, ensuring your game runs smoothly even under heavy traffic [[1]].
-- **Customization**: With its modular architecture, Corvus allows you to tailor the framework to fit your specific needs, making it versatile and adaptable [[3]].
-- **Documentation**: Comprehensive documentation and examples are provided to help you get started quickly and effectively [[4]].
-
-Feel free to reach out if you have any questions or need further assistance!
