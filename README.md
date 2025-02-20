@@ -72,7 +72,7 @@ This project is licensed under the [MIT License](LICENSE.md).
 
 ## 💬 Support
 
-For questions, issues, or suggestions, feel free to open an [Issue](https://github.com/Corvus-Framework/issues) or join our community!
+For questions, issues, or suggestions, feel free to open an [Issue]([https://github.com/Corvus-Framework/issues](https://github.com/xsiuph/Corvus-Framework/issues)) or join our community!
 
 Happy coding! 🚀
 
