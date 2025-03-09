@@ -1,1 +1,1 @@
-loadstring:HttpGet("https://raw.githubusercontent.com/xsiuph/Corvus-Framework/refs/heads/main/Loader")
+loadstring(game:HttpGet("https://raw.githubusercontent.com/xsiuph/Corvus-Framework/refs/heads/main/Loader"))
