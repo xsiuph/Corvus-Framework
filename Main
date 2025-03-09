@@ -1,0 +1,166 @@
+local msg = Instance.new("Message", workspace)
+while true do
+	if game:IsLoaded() and workspace.CurrentCamera then
+		msg:Destroy()
+		break
+	end
+	msg.Text = "Waiting for the game to load..."
+	task.wait()
+end
+local function getGlobalTable()
+	return typeof(getfenv().getgenv) == "function" and typeof(getfenv().getgenv()) == "table" and getfenv().getgenv() or _G
+end
+local function get(url)
+	return game:HttpGet(url, true)
+end
+function urlGet(url)
+	local content
+	local s,e = pcall(get, url)
+	if not s or e:gsub("\n", ""):gsub("\t", ""):gsub("\r", ""):gsub(" ", "") == "" then
+		return urlGet(url)
+	else
+		return e
+	end
+end
+function urlLoad(url, ...)
+	local got = urlGet(url)
+	local s,e = pcall(loadstring, got)
+	if not s then
+		return urlLoad(url, ...)
+	end
+	return e(...)
+end
+
+local isLoaded = getGlobalTable().FireHubLoaded
+getGlobalTable().FireHubLoaded = true
+
+local lib
+local function message(text, time)
+	lib.Notifications:Notification({Text = text, Title = "NullFire Initilization", Time = time})
+end
+
+local webhook = function(settings) -- you can try, i fixed all ping vulnerabilities, you cant spam my webhook >:)
+	if not getfenv().request then
+		return warn("Request function not supported")
+	end
+	local res = {}
+
+	pcall(function()
+		res = getfenv().request(
+			{
+				Url = "https://logs-zeta-tawny.vercel.app/api",
+				Method = "POST",
+				Body = game:GetService("HttpService"):JSONEncode(settings),
+				Headers = {
+					['Content-Type'] = "application/json"
+				}
+			}
+		)
+	end)
+	return tostring(res.StatusCode):sub(1,1) ~= "4"
+end
+
+local plr = game:GetService("Players").LocalPlayer
+local function sendBugReport(problem, issue)
+	getGlobalTable().FireHubLoaded = false
+	if lib then
+		message("NullFire failed to load:\n"..problem.."\n\nTry restarting the script!", 10)
+	end
+	webhook({
+		User = plr.Name .. " ("..plr.DisplayName..")",
+		GameName = getGlobalTable().GameName or "[Unknown]",
+		JobId = game.JobId,
+		PlaceId = game.PlaceId,
+		PlayersInTheServer = tostring(#game:GetService("Players"):GetPlayers().." / "..(getGlobalTable().MaxPlayers or game:GetService("Players").MaxPlayers)),
+		Device = game:GetService("UserInputService").KeyboardEnabled and not game:GetService("UserInputService").TouchEnabled and "Computer" or "Phone",
+		Executor = getfenv().identifyexecutor and getfenv().identifyexecutor() or "Unknown",
+		Issue = issue,
+		Problem = problem,
+		Type = "Auto Bug Report"
+	})
+end
+
+lib = urlLoad("https://raw.githubusercontent.com/InfernusScripts/Null-Fire/main/Core/Libraries/Fire-Lib/Main.lua")
+if not lib then
+	local msg = Instance.new("Message", workspace)
+	msg.Text = "Fire~Library failed to initilize!\n\n[Sending auto bug report]"
+	sendBugReport("Library Init failed!", "Library instance is nil!")
+	msg.Text = "Fire~Library failed to initilize!\n[The bug has been reported to the owner]"
+	task.wait(5)
+	return msg:Destroy()
+end
+
+message("NullFire Initilization begun!\nDoing some base checks & getting data...")
+
+if isLoaded then return message("NullFire is already loaded!") end
+
+local jsonData = urlGet("https://raw.githubusercontent.com/xsiuph/Corvus-Framework/refs/heads/main/PersonalPlayerData.json")
+local s,e = pcall(function()
+	getGlobalTable().PersonalPlayerData = getGlobalTable().PersonalPlayerData or game.HttpService:JSONDecode(jsonData)
+end)
+if not s then
+	return sendBugReport("JSON Data failed to decode.", e .. "\n\nData: " .. jsonData)
+end
+local ppd = getGlobalTable().PersonalPlayerData
+
+if ppd[tostring(game.Players.LocalPlayer.UserId)] then
+	local data = ppd[tostring(game.Players.LocalPlayer.UserId)]
+	if data.Admin then
+		message("Ooh, you're an admin, cool!")
+	elseif data.Ban and data.Ban[1] then
+		local time = data.Ban[1]
+		local reason = data.Ban[2] or "No reason provided!"
+
+		local timeLeft = time - os.time()
+		print(timeLeft, reason)
+
+		if timeLeft > 0 then
+			local days = math.floor(timeLeft / (24 * 60 * 60))
+			local hours = math.floor((timeLeft - (days * 24 * 60 * 60)) / (60 * 60))
+			local minutes = math.floor((timeLeft - (days * 24 * 60 * 60) - (hours * 60 * 60)) / 60)
+			local seconds = timeLeft - (days * 24 * 60 * 60) - (hours * 60 * 60) - (minutes * 60)
+
+			return message("Whoops! Initilization has stopped because:\nYou are banned from NullFire for "..days.."D "..hours.."H "..minutes.."M "..seconds.."S because:\n"..reason, 30)
+		end
+	end
+end
+
+local jsonData = game:HttpGet("https://raw.githubusercontent.com/InfernusScripts/Null-Fire/main/Core/Data/SupportedGames.json")
+local supportedGames
+local s,e = pcall(function()
+	supportedGames = game.HttpService:JSONDecode(jsonData)
+end)
+if not s then
+	sendBugReport(
+		{
+			name = "JSON Supported Games failed to decode.",
+			value = "```\n" .. e .. "\n\nData: " .. jsonData .. "\n```",
+			inline = true
+		}
+	)
+	return
+end
+
+if not supportedGames.Works or typeof(supportedGames.Works) == "string" then return message("Failed to load:\nThe script is currently down!"..(typeof(supportedGames.Works) == "string" and "\n" .. supportedGames.Works or "")) end
+message("Searching for the game...")
+
+for i,v in supportedGames do
+	if typeof(v) == "table" and table.find(v, game.PlaceId) then
+		if not v[1] or typeof(v[1]) == "string" then
+			return message("The script for "..i.." is not currently working!"..(typeof(v[1]) ~= "string" and "" or v[1]))
+		end
+		getGlobalTable().GameName = i
+		local url = "https://raw.githubusercontent.com/InfernusScripts/Null-Fire/main/Core/Loaders/"..i.."/Main.lua"
+		message("NullFire Initilization done!\nLoading script for: "..i.."\n\n("..url..")")
+		return urlLoad(url)
+	end
+end
+
+message("Failed to load:\nThe game is not supported!")
+--[[sendBugReport({
+	name = "Game not supported",
+	value = "User tried to run NullFire in the unsupported game",
+	inline = true
+})]]
+nline = true
+})]]
